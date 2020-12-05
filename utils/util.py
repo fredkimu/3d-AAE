@@ -62,8 +62,7 @@ def find_latest_epoch(dirpath):
 def cuda_setup(cuda=False, gpu_idx=0):
     if cuda and torch.cuda.is_available():
         device = torch.device('cuda')
-        torch.cuda.set_device(gpu_idx)
+        torch.cuda.device(gpu_idx)
     else:
         device = torch.device('cpu')
     return device
-

@@ -1,4 +1,5 @@
 import urllib
+import urllib.request
 import shutil
 from os import listdir, makedirs, remove
 from os.path import exists, join
@@ -131,4 +132,3 @@ class ShapeNetDataset(Dataset):
                         dst=self.root_dir)
 
         shutil.rmtree(extracted_dir)
-

@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/content/drive/Shared drives/Google Colab/3d-AAE')
+
 import argparse
 import json
 import logging
@@ -227,9 +230,10 @@ def main(config):
             fake = G(fixed_noise).data.cpu().numpy()
             codes, _, _ = E(X)
             X_rec = G(codes).data.cpu().numpy()
+            X_ = X.data.cpu().numpy()
 
         for k in range(5):
-            fig = plot_3d_point_cloud(X[k][0], X[k][1], X[k][2],
+            fig = plot_3d_point_cloud(X_[k][0], X_[k][1], X_[k][2],
                                       in_u_sphere=True, show=False,
                                       title=str(epoch))
             fig.savefig(

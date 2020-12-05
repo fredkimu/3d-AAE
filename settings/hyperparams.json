@@ -1,6 +1,6 @@
 {
     "experiment_name": "experiment",
-    "results_root": "/Users/maciek/test-results",
+    "results_root": "/content/test-results",
     "clean_results_dir": false,
 
     "cuda": true,
@@ -12,7 +12,7 @@
     ],
 
     "dataset": "shapenet",
-    "data_dir": "/Users/maciek/shapenet",
+    "data_dir": "/content/dataset/shapenet",
     "classes": [],
     "shuffle": true,
     "transforms": ["rotate"],
@@ -37,7 +37,7 @@
     "save_frequency": 5,
     "epsilon": 0.001,
 
-    "arch": "avae",
+    "arch": "aae",
     "model": {
         "D": {
             "dropout": 0.5,
