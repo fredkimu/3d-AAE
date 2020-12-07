@@ -1,3 +1,8 @@
+import sys
+import os
+cwd = os.getcwd()
+sys.path.append(cwd)
+
 import argparse
 import json
 import logging

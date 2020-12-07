@@ -12,7 +12,7 @@
     ],
 
     "dataset": "shapenet",
-    "data_dir": "D:\\Work\\shapenet",
+    "data_dir": "D:\\Work\\3d-AAE\\shapenet",
     "classes": [],
     "shuffle": true,
     "transforms": ["rotate"],
