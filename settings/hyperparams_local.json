@@ -1,6 +1,6 @@
 {
     "experiment_name": "experiment",
-    "results_root": "D:\\Work\\3d-AAE",
+    "results_root": "C:\\Users\\fckim\\pythonProject\\3d-AAE",
     "clean_results_dir": false,
 
     "cuda": true,
@@ -12,7 +12,7 @@
     ],
 
     "dataset": "shapenet",
-    "data_dir": "D:\\Work\\3d-AAE\\shapenet",
+    "data_dir": "C:\\Users\\fckim\\pythonProject\\3d-AAE\\shapenet",
     "classes": [],
     "shuffle": true,
     "transforms": ["rotate"],
