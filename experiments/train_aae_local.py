@@ -69,6 +69,10 @@ def main(config):
         from datasets.dfaust import DFaustDataset
         dataset = DFaustDataset(root_dir=config['data_dir'],
                                 classes=config['classes'])
+    elif dataset_name == 'custom':
+        from datasets.customdataset import CustomDataset
+        dataset = CustomDataset(root_dir=config['data_dir'],
+                                  classes=config['classes'])
     else:
         raise ValueError(f'Invalid dataset name. Expected `shapenet` or '
                          f'`faust`. Got: `{dataset_name}`')
@@ -225,40 +229,41 @@ def main(config):
         #
         # Save intermediate results
         #
-        G.eval()
-        E.eval()
-        D.eval()
-        with torch.no_grad():
-            fake = G(fixed_noise).data.cpu().numpy()
-            codes, _, _ = E(X)
-            X_rec = G(codes).data.cpu().numpy()
-            X_ = X.data.cpu().numpy()
+        if epoch % config['save_frequency'] == 0:
+            G.eval()
+            E.eval()
+            D.eval()
+            with torch.no_grad():
+                fake = G(fixed_noise).data.cpu().numpy()
+                codes, _, _ = E(X)
+                X_rec = G(codes).data.cpu().numpy()
+                X_ = X.data.cpu().numpy()
 
-        for k in range(5):
-            fig = plot_3d_point_cloud(X_[k][0], X_[k][1], X_[k][2],
-                                      in_u_sphere=True, show=False,
-                                      title=str(epoch))
-            fig.savefig(
-                join(results_dir, 'samples', f'{epoch:05}_{k}_real.png'))
-            plt.close(fig)
+            for k in range(5):
+                fig = plot_3d_point_cloud(X_[k][0], X_[k][1], X_[k][2],
+                                          in_u_sphere=True, show=False,
+                                          title=str(epoch))
+                fig.savefig(
+                    join(results_dir, 'samples', f'{epoch:05}_{k}_real.png'))
+                plt.close(fig)
 
-        for k in range(5):
-            fig = plot_3d_point_cloud(fake[k][0], fake[k][1], fake[k][2],
-                                      in_u_sphere=True, show=False,
-                                      title=str(epoch))
-            fig.savefig(
-                join(results_dir, 'samples', f'{epoch:05}_{k}_fixed.png'))
-            plt.close(fig)
+            for k in range(5):
+                fig = plot_3d_point_cloud(fake[k][0], fake[k][1], fake[k][2],
+                                          in_u_sphere=True, show=False,
+                                          title=str(epoch))
+                fig.savefig(
+                    join(results_dir, 'samples', f'{epoch:05}_{k}_fixed.png'))
+                plt.close(fig)
 
-        for k in range(5):
-            fig = plot_3d_point_cloud(X_rec[k][0],
-                                      X_rec[k][1],
-                                      X_rec[k][2],
-                                      in_u_sphere=True, show=False,
-                                      title=str(epoch))
-            fig.savefig(join(results_dir, 'samples',
-                             f'{epoch:05}_{k}_reconstructed.png'))
-            plt.close(fig)
+            for k in range(5):
+                fig = plot_3d_point_cloud(X_rec[k][0],
+                                          X_rec[k][1],
+                                          X_rec[k][2],
+                                          in_u_sphere=True, show=False,
+                                          title=str(epoch))
+                fig.savefig(join(results_dir, 'samples',
+                                 f'{epoch:05}_{k}_reconstructed.png'))
+                plt.close(fig)
 
         if epoch % config['save_frequency'] == 0:
             torch.save(G.state_dict(), join(weights_path, f'{epoch:05}_G.pth'))

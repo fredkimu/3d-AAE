@@ -1,0 +1,77 @@
+{
+    "experiment_name": "experiment_customdata_171220",
+    "results_root": "D:\\Work\\3d-AAE",
+    "clean_results_dir": false,
+
+    "cuda": true,
+    "gpu": 3,
+    "epoch": 3900,
+
+    "reconstruction_loss": "chamfer",
+
+    "metrics": [
+    ],
+
+    "dataset": "custom",
+    "data_dir": "D:\\Work\\3d-AAE\\customdata",
+    "classes": [],
+    "shuffle": true,
+    "transforms": ["rotate"],
+    "num_workers": 8,
+    "n_points": 2048,
+
+    "max_epochs": 4000,
+    "batch_size": 50,
+    "gp_lambda": 10,
+    "reconstruction_coef": 0.05,
+    "z_size": 128,
+    "distribution": "bernoulli",
+
+    "p": 0.2,
+    "z_beta_a": 0.01,
+    "z_beta_b": 0.01,
+
+    "normal_mu": 0.0,
+    "normal_std": 0.2,
+
+    "seed": 2018,
+    "save_frequency": 100,
+    "epsilon": 0.001,
+
+    "arch": "aae",
+    "model": {
+        "D": {
+            "dropout": 0.5,
+            "use_bias": true,
+            "relu_slope": 0.2
+        },
+        "G": {
+            "use_bias": true,
+            "relu_slope": 0.2
+        },
+        "E": {
+            "use_bias": true,
+            "relu_slope": 0.2
+        }
+    },
+    "optimizer": {
+        "D": {
+            "type": "Adam",
+            "hyperparams": {
+                "lr": 0.0001,
+                "weight_decay": 0,
+                "betas": [0.5, 0.999],
+                "amsgrad": false
+            }
+        },
+        "EG": {
+            "type": "Adam",
+            "hyperparams": {
+                "lr": 0.0001,
+                "weight_decay": 0,
+                "betas": [0.5, 0.999],
+                "amsgrad": false
+            }
+        }
+    }
+}

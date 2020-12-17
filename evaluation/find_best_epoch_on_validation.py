@@ -1,3 +1,8 @@
+import sys
+import os
+cwd = os.getcwd()
+sys.path.append(cwd)
+
 import argparse
 import json
 import logging
@@ -69,6 +74,10 @@ def main(eval_config):
         from datasets.mcgill import McGillDataset
         dataset = McGillDataset(root_dir=train_config['data_dir'],
                                 classes=train_config['classes'], split='valid')
+    elif dataset_name == 'custom':
+        from datasets.customdataset import CustomDataset
+        dataset = CustomDataset(root_dir=train_config['data_dir'],
+                                  classes=train_config['classes'])
     else:
         raise ValueError(f'Invalid dataset name. Expected `shapenet` or '
                          f'`faust`. Got: `{dataset_name}`')
@@ -88,7 +97,7 @@ def main(eval_config):
     #
     # Models
     #
-    arch = import_module(f"model.architectures.{train_config['arch']}")
+    arch = import_module(f"models.{train_config['arch']}")
     E = arch.Encoder(train_config).to(device)
     G = arch.Generator(train_config).to(device)
 
@@ -134,6 +143,7 @@ def main(eval_config):
                     X_g = G(noise)
                 if X_g.shape[-2:] == (3, 2048):
                     X_g.transpose_(1, 2)
+
 
                 jsd = jsd_between_point_cloud_sets(X, X_g, voxels=28)
                 js_results.append(jsd)

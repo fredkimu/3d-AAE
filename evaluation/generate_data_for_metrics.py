@@ -1,3 +1,8 @@
+import sys
+import os
+cwd = os.getcwd()
+sys.path.append(cwd)
+
 import argparse
 import json
 import logging
@@ -10,8 +15,8 @@ import torch
 from torch.distributions import Beta
 from torch.utils.data import DataLoader
 
-from datasets.shapenet.shapenet import ShapeNetDataset
-from loggers.basic_logger import setup_logging
+from datasets.shapenet import ShapeNetDataset
+from utils.util import setup_logging
 from utils.util import find_latest_epoch, cuda_setup
 
 
@@ -56,6 +61,10 @@ def main(eval_config):
         from datasets.mcgill import McGillDataset
         dataset = McGillDataset(root_dir=train_config['data_dir'],
                                 classes=train_config['classes'], split='test')
+    elif dataset_name == 'custom':
+        from datasets.customdataset import CustomDataset
+        dataset = CustomDataset(root_dir=train_config['data_dir'],
+                                  classes=train_config['classes'], split='test')
     else:
         raise ValueError(f'Invalid dataset name. Expected `shapenet` or '
                          f'`faust`. Got: `{dataset_name}`')
@@ -75,7 +84,7 @@ def main(eval_config):
     #
     # Models
     #
-    arch = import_module(f"model.architectures.{eval_config['arch']}")
+    arch = import_module(f"models.{eval_config['arch']}")
     E = arch.Encoder(train_config).to(device)
     G = arch.Generator(train_config).to(device)
 
@@ -100,8 +109,9 @@ def main(eval_config):
 
     X, _ = next(iter(data_loader))
     X = X.to(device)
+    X_ = X.data.cpu().numpy()
 
-    np.save(join(train_results_path, 'results', f'{epoch:05}_X'), X)
+    np.save(join(train_results_path, 'results', f'{epoch:05}_X'), X_)
 
     for i in range(3):
         if distribution == 'normal':
@@ -116,7 +126,9 @@ def main(eval_config):
         if X_g.shape[-2:] == (3, 2048):
             X_g.transpose_(1, 2)
 
-        np.save(join(train_results_path, 'results', f'{epoch:05}_Xg_{i}'), X_g)
+        X_g_ = X_g.data.cpu().numpy()
+
+        np.save(join(train_results_path, 'results', f'{epoch:05}_Xg_{i}'), X_g_)
 
     with torch.no_grad():
         z_e = E(X.transpose(1, 2))
@@ -126,7 +138,9 @@ def main(eval_config):
     if X_rec.shape[-2:] == (3, 2048):
         X_rec.transpose_(1, 2)
 
-    np.save(join(train_results_path, 'results', f'{epoch:05}_Xrec'), X_rec)
+    X_rec_ = X_rec.data.cpu().numpy()
+
+    np.save(join(train_results_path, 'results', f'{epoch:05}_Xrec'), X_rec_)
 
 
 if __name__ == '__main__':

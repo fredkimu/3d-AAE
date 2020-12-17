@@ -114,4 +114,3 @@ class Encoder(nn.Module):
         logvar = self.std_layer(logit)
         z = self.reparameterize(mu, logvar)
         return z, mu, logvar
-
